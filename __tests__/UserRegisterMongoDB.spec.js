@@ -1,24 +1,30 @@
 const request = require('supertest');
 const app = require('../src/app');
-const User = require('../src/user/User');
-const sequelize = require('../src/config/database');
+require('dotenv').config();
+const UserModel = require('../src/model/user.model');
 
-xdescribe('User Registration', () => {
+const {connect, disconnect} = require('../src/utils/Mongoose');
 
-  beforeAll(() => {
-    return sequelize.sync();
+describe('User Registration MongoDB', () => {
+  const REGISTER_ENDPOINT_MONGODB = '/api/1.0/mongodb/users';
+
+  beforeAll(async () => {
+    await connect(process.env.MONGODB_TEST_DATABASE_URL);
   });
 
-  beforeEach(() => {
-    return User.destroy({truncate: true});
+  beforeEach(async () => {
+    await UserModel.deleteMany({});
   });
 
+  afterAll(async () => {
+    await disconnect();
+  });
 
   it('returns 200 OK when signup request is valid', (done) => {
-    request(app).post('/api/1.0/users')
+    request(app).post(REGISTER_ENDPOINT_MONGODB)
       .send(
         {
-          username: 'user1',
+          username: 'user1mongo',
           email: 'user1@gmail.com',
           password: 'password'
         }
@@ -29,10 +35,10 @@ xdescribe('User Registration', () => {
   });
 
   it('returns success message when signup request is valid', (done) => {
-    request(app).post('/api/1.0/users')
+    request(app).post(REGISTER_ENDPOINT_MONGODB)
       .send(
         {
-          username: 'user1',
+          username: 'user1mongo',
           email: 'user1@gmail.com',
           password: 'password'
         }
@@ -43,16 +49,16 @@ xdescribe('User Registration', () => {
   });
 
   it('saves the user to database', (done) => {
-    request(app).post('/api/1.0/users')
+    request(app).post(REGISTER_ENDPOINT_MONGODB)
       .send(
         {
-          username: 'user1',
+          username: 'user1mongo',
           email: 'user1@gmail.com',
           password: 'password'
         }
       ).then(() => {
-        //query user table
-      User.findAll().then((userList) => {
+      //query user table
+      UserModel.find().then((userList) => {
         expect(userList.length).toBe(1);
         done();
       });
@@ -60,22 +66,23 @@ xdescribe('User Registration', () => {
   });
 
   it('saves username and email to database', (done) => {
-    request(app).post('/api/1.0/users')
+    request(app).post(REGISTER_ENDPOINT_MONGODB)
       .send(
         {
-          username: 'user1',
+          username: 'user1mongo',
           email: 'user1@gmail.com',
           password: 'password'
         }
       ).then(() => {
       //query user table
-      User.findAll().then((userList) => {
+      UserModel.find().then((userList) => {
         const savedUser = userList[0];
-        expect(savedUser.username).toBe('user1');
+        expect(savedUser.username).toBe('user1mongo');
         expect(savedUser.email).toBe('user1@gmail.com');
         done();
       });
     })
   });
-
 });
+
+
