@@ -13,10 +13,6 @@ router.post('/api/1.0/users', async (req, res) => {
   );
 });
 
-
-
-
-
 router.post('/api/1.0/mongodb/users', async (req, res) => {
   await UserService.saveMongoDB(req.body);
 
