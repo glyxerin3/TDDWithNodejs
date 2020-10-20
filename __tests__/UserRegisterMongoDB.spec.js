@@ -1,15 +1,16 @@
+require('dotenv').config();
 const request = require('supertest');
 const app = require('../src/app');
-require('dotenv').config();
 const UserModel = require('../src/model/user.model');
 
 const {connect, disconnect} = require('../src/utils/Mongoose');
 
 describe('User Registration MongoDB', () => {
   const REGISTER_ENDPOINT_MONGODB = '/api/1.0/mongodb/users';
+  const MONGODB_TEST_DATABASE_URL = 'mongodb://localhost:27017/hoax-app_test';
 
   beforeAll(async () => {
-    await connect(process.env.MONGODB_TEST_DATABASE_URL);
+    await connect(MONGODB_TEST_DATABASE_URL);
   });
 
   beforeEach(async () => {
@@ -82,6 +83,26 @@ describe('User Registration MongoDB', () => {
         done();
       });
     })
+  });
+
+  it('hashes the password in mongodb database', (done) => {
+    request(app).post(REGISTER_ENDPOINT_MONGODB)
+      .send(
+        {
+          username: 'user1mongo',
+          email: 'user1@gmail.com',
+          password: 'password'
+        }
+      ).then(() => {
+      //query user table
+      UserModel.find().then((userList) => {
+        const savedUser = userList[0];
+        expect(savedUser.username).toBe('user1mongo');
+        expect(savedUser.password).not.toBe('password');
+        done();
+      });
+    })
+
   });
 });
 

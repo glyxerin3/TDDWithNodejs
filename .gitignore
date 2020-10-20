@@ -1,4 +1,8 @@
 node_modules
 mongo
+mongo/data
+mongo/mongo-console.bat
+mongo/mongod-start.bat
+mongo/mongod.conf
 
 .env

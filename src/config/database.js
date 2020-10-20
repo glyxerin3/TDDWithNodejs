@@ -7,4 +7,11 @@ const sequelize = new Sequelize("hoaxify", "my-db-user", "db-pass", {
   journal: false
 });
 
+//sequelize.query("PRAGMA journal_mode=OFF;");
+
+sequelize.afterConnect(async (connection, config) => {
+  console.log('HOOK CALLED');
+  connection.query('PRAGMA journal_mode=WAL;');
+});
+
 module.exports = sequelize;
