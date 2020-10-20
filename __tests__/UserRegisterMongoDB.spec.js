@@ -9,6 +9,17 @@ describe('User Registration MongoDB', () => {
   const REGISTER_ENDPOINT_MONGODB = '/api/1.0/mongodb/users';
   const MONGODB_TEST_DATABASE_URL = 'mongodb://localhost:27017/hoax-app_test';
 
+  const postValidUser = async () => {
+    return request(app).post(REGISTER_ENDPOINT_MONGODB)
+      .send(
+        {
+          username: 'user1mongo',
+          email: 'user1@gmail.com',
+          password: 'password'
+        }
+      );
+  };
+
   beforeAll(async () => {
     await connect(MONGODB_TEST_DATABASE_URL);
   });
@@ -21,88 +32,36 @@ describe('User Registration MongoDB', () => {
     await disconnect();
   });
 
-  it('returns 200 OK when signup request is valid', (done) => {
-    request(app).post(REGISTER_ENDPOINT_MONGODB)
-      .send(
-        {
-          username: 'user1mongo',
-          email: 'user1@gmail.com',
-          password: 'password'
-        }
-      ).then((response) => {
-      expect(response.status).toBe(200);
-      done();
-    })
+  it('returns 200 OK when signup request is valid', async () => {
+    const response = await postValidUser();
+    expect(response.status).toBe(200);
   });
 
-  it('returns success message when signup request is valid', (done) => {
-    request(app).post(REGISTER_ENDPOINT_MONGODB)
-      .send(
-        {
-          username: 'user1mongo',
-          email: 'user1@gmail.com',
-          password: 'password'
-        }
-      ).then((response) => {
-      expect(response.body.message).toBe('User created');
-      done();
-    })
+  it('returns success message when signup request is valid', async () => {
+    const response = await postValidUser();
+    expect(response.body.message).toBe('User created');
   });
 
-  it('saves the user to database', (done) => {
-    request(app).post(REGISTER_ENDPOINT_MONGODB)
-      .send(
-        {
-          username: 'user1mongo',
-          email: 'user1@gmail.com',
-          password: 'password'
-        }
-      ).then(() => {
-      //query user table
-      UserModel.find().then((userList) => {
-        expect(userList.length).toBe(1);
-        done();
-      });
-    })
+  it('saves the user to database', async () => {
+    await postValidUser();
+    const userList = await UserModel.find();
+    expect(userList.length).toBe(1);
   });
 
-  it('saves username and email to database', (done) => {
-    request(app).post(REGISTER_ENDPOINT_MONGODB)
-      .send(
-        {
-          username: 'user1mongo',
-          email: 'user1@gmail.com',
-          password: 'password'
-        }
-      ).then(() => {
-      //query user table
-      UserModel.find().then((userList) => {
-        const savedUser = userList[0];
-        expect(savedUser.username).toBe('user1mongo');
-        expect(savedUser.email).toBe('user1@gmail.com');
-        done();
-      });
-    })
+  it('saves username and email to database', async () => {
+    await postValidUser();
+    const userList = await UserModel.find();
+    const savedUser = userList[0];
+    expect(savedUser.username).toBe('user1mongo');
+    expect(savedUser.email).toBe('user1@gmail.com');
   });
 
-  it('hashes the password in mongodb database', (done) => {
-    request(app).post(REGISTER_ENDPOINT_MONGODB)
-      .send(
-        {
-          username: 'user1mongo',
-          email: 'user1@gmail.com',
-          password: 'password'
-        }
-      ).then(() => {
-      //query user table
-      UserModel.find().then((userList) => {
-        const savedUser = userList[0];
-        expect(savedUser.username).toBe('user1mongo');
-        expect(savedUser.password).not.toBe('password');
-        done();
-      });
-    })
-
+  it('hashes the password in database', async () => {
+    await postValidUser();
+    const userList = await UserModel.find();
+    const savedUser = userList[0];
+    expect(savedUser.username).toBe('user1mongo');
+    expect(savedUser.password).not.toBe('password');
   });
 });
 
