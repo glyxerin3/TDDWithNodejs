@@ -3,7 +3,7 @@ const app = require('../src/app');
 const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
 
-xdescribe('User Registration', () => {
+describe('User Registration', () => {
 
   beforeAll(() => {
     return sequelize.sync();
