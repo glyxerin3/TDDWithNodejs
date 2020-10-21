@@ -33,6 +33,18 @@ router.post('/api/1.0/users', async (req, res) => {
 });
 
 router.post('/api/1.0/mongodb/users', async (req, res) => {
+  const user = req.body;
+
+  if (user.username === null) {
+    return res.status(400).send(
+      {
+        validationErrors: {
+          username: 'Username cannot be null'
+        }
+      }
+    );
+  }
+
   await UserService.saveMongoDB(req.body);
 
   return res.send(
