@@ -40,17 +40,10 @@ router.post('/api/1.0/users', validateUsername, validateEmail, async (req, res) 
   );
 });
 
-router.post('/api/1.0/mongodb/users', async (req, res) => {
-  const user = req.body;
-
-  if (user.username === null) {
-    return res.status(400).send(
-      {
-        validationErrors: {
-          username: 'Username cannot be null'
-        }
-      }
-    );
+router.post('/api/1.0/mongodb/users', validateUsername, validateEmail, async (req, res) => {
+  if (req.validationErrors) {
+    const response = { validationErrors: {...req.validationErrors}};
+    return res.status(400).send(response);
   }
 
   await UserService.saveMongoDB(req.body);
