@@ -43,7 +43,8 @@ router.post('/api/1.0/mongodb/users',
     .isEmail().withMessage('Email is not valid'),
   check('password')
     .notEmpty().withMessage('Password cannot be null').bail()
-    .isLength({min: 6}).withMessage('Password must be at least 6 characters'),
+    .isLength({min: 6}).withMessage('Password must be at least 6 characters').bail()
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).withMessage('Password must have at least 1 uppercase, 1 lowercase letter and 1 number'),
   async (req, res) => {
 
     const errors = validationResult(req);

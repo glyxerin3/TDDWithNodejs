@@ -10,7 +10,7 @@ const REGISTER_ENDPOINT_MONGODB = '/api/1.0/mongodb/users';
 const validUser = {
   username: 'user1mongo',
   email: 'user1@gmail.com',
-  password: 'password'
+  password: 'P4ssword'
 };
 
 const postUser = (user = validUser) => {
@@ -101,6 +101,7 @@ describe('User Registration MongoDB', () => {
     ${'email'}    | ${'user@mail'}            | ${'Email is not valid'}
     ${'password'} | ${null}                   | ${'Password cannot be null'}
     ${'password'} | ${'pass'}                 | ${'Password must be at least 6 characters'}
+    ${'password'} | ${'alllowercase'}         | ${'Password must have at least 1 uppercase, 1 lowercase letter and 1 number'}
   `('returns $expectedMessage when $field is $value', async ({field, expectedMessage, value}) => {
     const user = {
       username: 'user1mongo',
@@ -122,7 +123,7 @@ describe('User Registration MongoDB', () => {
       }
     );
     const body = response.body;
-    expect(Object.keys(body.validationErrors)).toEqual(['username', 'email']);
+    expect(Object.keys(body.validationErrors)).toEqual(['username', 'email', 'password']);
   });
 
 });
