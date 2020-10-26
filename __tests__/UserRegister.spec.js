@@ -80,13 +80,12 @@ describe('User Registration', () => {
     expect(body.validationErrors).not.toBeUndefined();
   });
 
-  it.each(
-    [
-      ['username', 'Username cannot be null'],
-      ['email', 'Email cannot be null'],
-      ['password', 'Password cannot be null']
-    ]
-  )('when %s is null %s is received', async (field, expectedMessage) => {
+  it.each`
+    field         | expectedMessage
+    ${'username'} | ${'Username cannot be null'}
+    ${'email'}    | ${'Email cannot be null'}
+    ${'password'} | ${'Password cannot be null'}
+  `('returns $expectedMessage when $field is null', async ({field, expectedMessage}) => {
     const user = {
       username: 'user1',
       email: 'user1@gmail.com',
