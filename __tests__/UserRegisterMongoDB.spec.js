@@ -100,6 +100,7 @@ describe('User Registration MongoDB', () => {
     ${'email'}    | ${'user.mail.com'}        | ${'Email is not valid'}
     ${'email'}    | ${'user@mail'}            | ${'Email is not valid'}
     ${'password'} | ${null}                   | ${'Password cannot be null'}
+    ${'password'} | ${'pass'}                 | ${'Password must be at least 6 characters'}
   `('returns $expectedMessage when $field is $value', async ({field, expectedMessage, value}) => {
     const user = {
       username: 'user1mongo',
