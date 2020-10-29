@@ -19,6 +19,9 @@ const save = async (body) => {
   await User.create(user);
 };
 
+const findByEmail = async (email) => {
+  return await User.findOne({ where: { email: email } });
+};
 
 const saveMongoDB = async (body) => {
   const hash = await bcrypt.hash(body.password, 10);
@@ -32,4 +35,4 @@ const saveMongoDB = async (body) => {
   await UserModel.create(user);
 };
 
-module.exports = {save, saveMongoDB};
+module.exports = {save, findByEmail, saveMongoDB};
