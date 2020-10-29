@@ -19,6 +19,7 @@ const save = async (body) => {
   await User.create(user);
 };
 
+
 const saveMongoDB = async (body) => {
   const hash = await bcrypt.hash(body.password, 10);
 
