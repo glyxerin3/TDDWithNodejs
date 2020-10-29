@@ -47,7 +47,13 @@ router.post('/api/1.0/mongodb/users',
     .isLength({ min: 4, max: 32 }).withMessage('Must have min 4 and max 32 characters'),
   check('email')
     .notEmpty().withMessage('Email cannot be null').bail()
-    .isEmail().withMessage('Email is not valid'),
+    .isEmail().withMessage('Email is not valid').bail()
+    .custom(async (email) => {
+      const user = await UserService.findByEmailMongoDB(email);
+      if (user) {
+        throw new Error('E-mail in use');
+      }
+    }),
   check('password')
     .notEmpty().withMessage('Password cannot be null').bail()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters').bail()

@@ -35,4 +35,8 @@ const saveMongoDB = async (body) => {
   await UserModel.create(user);
 };
 
-module.exports = {save, findByEmail, saveMongoDB};
+const findByEmailMongoDB = async (email) => {
+  return await UserModel.findOne( { email: email });
+};
+
+module.exports = {save, findByEmail, saveMongoDB, findByEmailMongoDB};
