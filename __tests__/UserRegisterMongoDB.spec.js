@@ -131,6 +131,12 @@ describe('User Registration MongoDB', () => {
     expect(Object.keys(body.validationErrors)).toEqual(['username', 'email', 'password']);
   });
 
+  it('returns E-mail in use when same email is already in use', async () => {
+    await UserModel.create({ ...validUser});
+    const response = await postUser();
+    expect(response.body.validationErrors.email).toBe('E-mail in use');
+  });
+
 });
 
 

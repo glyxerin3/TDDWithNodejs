@@ -62,14 +62,17 @@ router.post('/api/1.0/mongodb/users',
       return res.status(400).send({validationErrors});
     }
 
-  await UserService.saveMongoDB(req.body);
+    try {
+      await UserService.saveMongoDB(req.body);
 
-  return res.send(
-    {
-      message: 'User created'
+      return res.send(
+        {
+          message: 'User created'
+        }
+      );
+    } catch (err) {
+      return res.status(400).send({validationErrors: {email: 'E-mail in use'}});
     }
-  );
-
 });
 
 module.exports = router;
