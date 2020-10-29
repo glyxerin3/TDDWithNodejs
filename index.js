@@ -3,7 +3,7 @@ const sequelize = require('./src/config/database');
 const mongodb = require('./src/config/databaseMongoDB');
 require('dotenv').config();
 
-sequelize.sync();
+sequelize.sync({force: true});
 
 mongodb();
 
