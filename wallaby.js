@@ -3,7 +3,10 @@ process.env.NODE_ENV = "test";
 module.exports = function () {
 
   return {
-    files: ['src/**/*.js', '!__tests__/*.js'],
+    files: [
+      'src/**/*.js',
+      '!__tests__/*.js'
+    ],
 
     tests: ['__tests__/*.js'],
 
