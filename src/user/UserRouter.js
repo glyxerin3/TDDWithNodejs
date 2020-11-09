@@ -26,7 +26,7 @@ router.post('/api/1.0/users',
 
     const errors = validationResult(req);
 
-    console.log(errors)
+    console.log(errors);
     if (!errors.isEmpty()) {
       const validationErrors = {};
 

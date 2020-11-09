@@ -9,18 +9,6 @@ const validUser = {
   password: 'P4ssword'
 };
 
-const validUser2 = {
-  username: 'user2',
-  email: 'user2@gmail.com',
-  password: 'P4ssword'
-};
-
-const validUser3 = {
-  username: 'user3',
-  email: 'user3@gmail.com',
-  password: 'P4ssword'
-};
-
 const postUser = (user = validUser, options = {language: 'en'}) => {
   const agent = request(app).post('/api/1.0/users');
 
@@ -40,7 +28,6 @@ describe('User Registration', () => {
   beforeEach(() => {
     return User.destroy({truncate: true});
   });
-
 
   it('returns 200 OK when signup request is valid', async () => {
     const response = await postUser();
@@ -107,7 +94,6 @@ describe('User Registration', () => {
   const email_inuse = 'E-mail in use';
   const user_create_success = 'User created';
 
-
   it.each`
     field         | value                     | expectedMessage
     ${'username'} | ${null}                   | ${username_null}
@@ -169,19 +155,14 @@ describe('User Registration', () => {
   });
 });
 
-
 describe(`Internationalisation`, () => {
-  // const validUser = {
-  //   username: 'user2',
-  //   email: 'user2@gmail.com',
-  //   password: 'P4ssword'
-  // };
-  //
-  // const postUser = (user = validUser) => {
-  //   return request(app).post('/api/1.0/users')
-  //     .set('accept-language', 'de')
-  //     .send(user);
-  // };
+  beforeAll(() => {
+    return sequelize.sync();
+  });
+
+  beforeEach(() => {
+    return User.destroy({truncate: true});
+  });
 
   const username_null = 'Username kann nicht null sein';
   const username_size = 'Muss zwischen 4 und 32 Zeichen haben';
@@ -223,13 +204,13 @@ describe(`Internationalisation`, () => {
   });
 
   it(`returns ${email_inuse} when same email is already in use when language is set as german`, async () => {
-    await User.create({ ...validUser2});
-    const response = await postUser({ ...validUser2}, {language: 'de'});
+    await User.create({ ...validUser});
+    const response = await postUser({ ...validUser}, {language: 'de'});
     expect(response.body.validationErrors.email).toBe(email_inuse);
   });
 
   it(`returns success message of ${user_create_success} when signup request is valid and language is set as german`, async () => {
-    const response = await postUser({ ...validUser3}, {language: 'de'});
+    const response = await postUser({ ...validUser}, {language: 'de'});
     expect(response.body.message).toBe(user_create_success);
   });
 });
