@@ -70,17 +70,13 @@ router.post('/api/1.0/mongodb/users',
       return res.status(400).send({ validationErrors });
     }
 
-    try {
-      await UserService.saveMongoDB(req.body);
+    await UserService.saveMongoDB(req.body);
 
-      return res.send(
-        {
-          message: req.t('user_create_success')
-        }
-      );
-    } catch (err) {
-      return res.status(400).send({ validationErrors: { email: req.t('email_inuse') } });
-    }
+    return res.send(
+      {
+        message: req.t('user_create_success')
+      }
+    );
   });
 
 module.exports = router;

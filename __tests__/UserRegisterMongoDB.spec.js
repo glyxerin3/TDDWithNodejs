@@ -26,6 +26,16 @@ const postUser = (user = validUser, options = {language: 'en'}) => {
 describe('User Registration MongoDB', () => {
 
   const MONGODB_TEST_DATABASE_URL = 'mongodb://localhost:27017/hoax-app_test';
+
+  const username_null = 'Username cannot be null';
+  const username_size = 'Must have min 4 and max 32 characters';
+  const email_null = 'Email cannot be null';
+  const email_invalid = 'Email is not valid';
+  const password_null = 'Password cannot be null';
+  const password_size = 'Password must be at least 6 characters';
+  const password_pattern = 'Password must have at least 1 uppercase, 1 lowercase letter and 1 number';
+  const email_inuse = 'E-mail in use';
+  const user_create_success = 'User created';
   
   beforeAll(async () => {
     await connect(MONGODB_TEST_DATABASE_URL);
@@ -47,6 +57,13 @@ describe('User Registration MongoDB', () => {
   it('returns success message when signup request is valid', async () => {
     const response = await postUser();
     expect(response.body.message).toBe(user_create_success);
+  });
+
+  it(`returns ${email_inuse} message when doing signup request with existing email`, async () => {
+    let response = await postUser();
+    response = await postUser();
+    expect(response.status).toBe(400);
+    expect(response.body.validationErrors.email).toBe(email_inuse);
   });
 
   it('saves the user to database', async () => {
@@ -94,16 +111,6 @@ describe('User Registration MongoDB', () => {
     const body = response.body;
     expect(body.validationErrors).not.toBeUndefined();
   });
-
-  const username_null = 'Username cannot be null';
-  const username_size = 'Must have min 4 and max 32 characters';
-  const email_null = 'Email cannot be null';
-  const email_invalid = 'Email is not valid';
-  const password_null = 'Password cannot be null';
-  const password_size = 'Password must be at least 6 characters';
-  const password_pattern = 'Password must have at least 1 uppercase, 1 lowercase letter and 1 number';
-  const email_inuse = 'E-mail in use';
-  const user_create_success = 'User created';
 
   it.each`
     field         | value                     | expectedMessage
