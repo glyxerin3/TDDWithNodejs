@@ -34,11 +34,15 @@ const findByEmail = async (email) => {
 };
 
 const saveMongoDB = async (body) => {
-  const hash = await bcrypt.hash(body.password, 10);
+  console.log(body)
+  const {username, email, password} = body;
+
+  const hash = await bcrypt.hash(password, 10);
 
   const user = {
-    username: body.username,
-    email: body.email,
+    username: username,
+    email: email,
+    activationToken: generateToken(16),
     password: hash
   };
 

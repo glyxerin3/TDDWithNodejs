@@ -159,6 +159,28 @@ describe('User Registration MongoDB', () => {
     expect(response.body.validationErrors.email).toBe(email_inuse);
   });
 
+  it('creates user in incative mode', async () => {
+    await postUser();
+    const users = await UserModel.find();
+    const savedUser = users[0];
+    expect(savedUser.inactive).toBe(true);
+  });
+
+  it('creates user in incative mode even the request body contains inactive as false', async () => {
+    const newUser = {...validUser, inactive: false};
+    await postUser(newUser);
+    const users = await UserModel.find();
+    const savedUser = users[0];
+    expect(savedUser.inactive).toBe(true);
+  });
+
+  it('creates an activationToken for user', async () => {
+    await postUser();
+    const users = await UserModel.find();
+    const savedUser = users[0];
+    expect(savedUser.activationToken).toBeTruthy();
+  });
+
 });
 
 describe(`Internationalisation`, () => {

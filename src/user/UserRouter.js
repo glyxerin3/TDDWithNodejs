@@ -70,6 +70,7 @@ router.post('/api/1.0/mongodb/users',
       return res.status(400).send({ validationErrors });
     }
 
+
     await UserService.saveMongoDB(req.body);
 
     return res.send(
