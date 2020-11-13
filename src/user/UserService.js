@@ -28,6 +28,7 @@ const save = async (body) => {
     activationToken: generateToken(16),
     password: hash
   };
+
   await User.create(user);
 
   await EmailService.sendAcoountActivation(email, user.activationToken);
@@ -38,7 +39,6 @@ const findByEmail = async (email) => {
 };
 
 const saveMongoDB = async (body) => {
-  console.log(body)
   const {username, email, password} = body;
 
   const hash = await bcrypt.hash(password, 10);
@@ -51,6 +51,8 @@ const saveMongoDB = async (body) => {
   };
 
   await UserModel.create(user);
+
+  await EmailService.sendAcoountActivation(email, user.activationToken);
 };
 
 const findByEmailMongoDB = async (email) => {

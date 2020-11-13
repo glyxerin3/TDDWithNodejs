@@ -2,6 +2,7 @@ require('dotenv').config();
 const request = require('supertest');
 const app = require('../src/app');
 const UserModel = require('../src/model/user.model');
+const nodemailerstub = require('nodemailer-stub');
 
 const {connect, disconnect} = require('../src/utils/Mongoose');
 
@@ -181,6 +182,15 @@ describe('User Registration MongoDB', () => {
     expect(savedUser.activationToken).toBeTruthy();
   });
 
+  it ('sends an Account activation email with activationToken', async () => {
+    await postUser();
+    const lastMail = nodemailerstub.interactsWithMail.lastMail();
+    expect(lastMail.to[0]).toBe('user1@gmail.com');
+
+    const users = await UserModel.find();
+    const savedUser = users[0];
+    expect(lastMail.content).toContain(savedUser.activationToken);
+  });
 });
 
 describe(`Internationalisation`, () => {
