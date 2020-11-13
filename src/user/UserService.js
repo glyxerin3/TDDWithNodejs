@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const nodemailerStub = require('nodemailer-stub');
+const EmailService = require('../email/EmailService');
 
 // Sequelize
 const User = require('./User');
@@ -31,16 +30,7 @@ const save = async (body) => {
   };
   await User.create(user);
 
-  const transporter = nodemailer.createTransport(nodemailerStub.stubTransport);
-  await transporter.sendMail(
-    {
-      from: 'My App <info@may-app.com>',
-      to: email,
-      subject: 'Account Activiation',
-      html:
-        `Token is ${user.activationToken}`
-    }
-  );
+  await EmailService.sendAcoountActivation(email, user.activationToken);
 };
 
 const findByEmail = async (email) => {
