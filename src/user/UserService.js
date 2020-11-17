@@ -43,6 +43,10 @@ const saveMongoDB = async (body) => {
 
   const hash = await bcrypt.hash(password, 10);
 
+  // const user = {...req.body, password: hash};
+  // const user  = Object.assign({},
+  //   {username: username, email: email, actvationToken: generateToken(16)},
+  //   {password: hash});
   const user = {
     username: username,
     email: email,
