@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const EmailService = require('../email/EmailService');
+const EmailException = require('../email/EmailException');
 
 // Sequelize
 const User = require('./User');
+const sequelize = require('../config/database');
 
 // MongoDB
 const UserModel = require('../model/user.model');
@@ -28,10 +30,17 @@ const save = async (body) => {
     activationToken: generateToken(16),
     password: hash
   };
+  const transaction = await sequelize.transaction();
 
   await User.create(user);
 
-  await EmailService.sendAcoountActivation(email, user.activationToken);
+  try {
+    await EmailService.sendAcoountActivation(email, user.activationToken);
+    await transaction.commit();
+  } catch (err) {
+    await transaction.rollback();
+    throw new EmailException();
+  }
 };
 
 const findByEmail = async (email) => {
@@ -54,9 +63,16 @@ const saveMongoDB = async (body) => {
     password: hash
   };
 
-  await UserModel.create(user);
 
-  await EmailService.sendAcoountActivation(email, user.activationToken);
+  await UserModel.create(user, {transaction: transaction});
+
+  // try {
+ await EmailService.sendAcoountActivation(email, user.activationToken);
+  //   await transaction.commit();
+  // } catch (err) {
+  //   await transaction.rollback();
+  //   throw new EmailException();
+  // }
 };
 
 const findByEmailMongoDB = async (email) => {

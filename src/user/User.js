@@ -3,7 +3,8 @@ const sequelize = require('../config/database');
 
 const Model = Sequelize.Model;
 
-class User extends Model { }
+class User extends Model {
+}
 
 User.init({
     username: {
@@ -16,13 +17,13 @@ User.init({
     password: {
       type: Sequelize.STRING
     },
-  inactive: {
+    inactive: {
       type: Sequelize.BOOLEAN,
       defaultValue: true
-  },
+    },
     activationToken: {
       type: Sequelize.STRING
-    },
+    }
   },
   {
     sequelize,

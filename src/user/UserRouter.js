@@ -33,13 +33,22 @@ router.post('/api/1.0/users',
       return res.status(400).send({ validationErrors });
     }
 
-    await UserService.save(req.body);
+    try {
+      await UserService.save(req.body);
 
-    return res.send(
-      {
-        message: req.t('user_create_success')
-      }
-    );
+      return res.send(
+        {
+          message: req.t('user_create_success')
+        }
+      );
+
+    } catch (error) {
+      return res.status(502).send(
+        {
+          message: req.t(error.message)
+        }
+      );
+    }
 
   });
 

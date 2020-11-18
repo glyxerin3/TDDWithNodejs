@@ -7,6 +7,7 @@
   "password_size"         : "Password muss mindestens 6 Zeichen lang sein",
   "password_pattern"      : "Password muss mindestens aus 1 Kleinbuchstaben, 1 Grossbuchstaben und 1 Zahl bestehen",
   "email_inuse"           : "E-mail wird bereits verwendet",
-  "user_create_success"   : "User wurde erstellt"
+  "user_create_success"   : "User wurde erstellt",
+  "email_failure"         : "E-mail fehlgeschlagen"
 }
                                                                      
