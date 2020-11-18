@@ -63,16 +63,9 @@ const saveMongoDB = async (body) => {
     password: hash
   };
 
+  await UserModel.create(user);
 
-  await UserModel.create(user, {transaction: transaction});
-
-  // try {
- await EmailService.sendAcoountActivation(email, user.activationToken);
-  //   await transaction.commit();
-  // } catch (err) {
-  //   await transaction.rollback();
-  //   throw new EmailException();
-  // }
+  await EmailService.sendAcoountActivation(email, user.activationToken);
 };
 
 const findByEmailMongoDB = async (email) => {
