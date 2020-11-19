@@ -4,6 +4,7 @@ const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
 const nodemailerstub = require('nodemailer-stub');
 const EmailService = require('../src/email/EmailService');
+
 const validUser = {
   username: 'user1',
   email: 'user1@gmail.com',
@@ -278,8 +279,8 @@ describe(`Internationalisation`, () => {
     const mockSendAccountActivation = jest.spyOn(EmailService, 'sendAcoountActivation')
       .mockRejectedValue({message: 'E-mail fehlgeschlagen'});
     const response = await postUser({...validUser}, {language: 'de'});
-    mockSendAccountActivation.mockRestore();
     expect(response.body.message).toBe(email_failure);
+    mockSendAccountActivation.mockRestore();
   });
 });
 

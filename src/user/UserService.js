@@ -65,7 +65,12 @@ const saveMongoDB = async (body) => {
 
   await UserModel.create(user);
 
-  await EmailService.sendAcoountActivation(email, user.activationToken);
+  try {
+    await EmailService.sendAcoountActivation(email, user.activationToken);
+  } catch (err) {
+    await UserModel.remove(user);
+    throw new EmailException();
+  }
 };
 
 const findByEmailMongoDB = async (email) => {
