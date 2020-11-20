@@ -25,7 +25,7 @@ const postUser = (user = validUser, options = {language: 'en'}) => {
   return agent.send(user);
 };
 
-describe('User Registration MongoDB', () => {
+xdescribe('User Registration MongoDB', () => {
 
   const MONGODB_TEST_DATABASE_URL = 'mongodb://localhost:27017/hoax-app_test';
 
@@ -220,7 +220,7 @@ describe('User Registration MongoDB', () => {
   });
 });
 
-describe(`Internationalisation`, () => {
+xdescribe(`Internationalisation`, () => {
   const MONGODB_TEST_DATABASE_URL = 'mongodb://localhost:27017/hoax-app_test';
 
   beforeAll(async () => {
